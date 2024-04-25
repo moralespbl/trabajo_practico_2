@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.unju.fi.ejercio3.constantes.Provincia;
-
 public class Main {
 	public static List<Provincia> provincias = new ArrayList<>(List.of(Provincia.values()));
 	public static void main(String[] args) {

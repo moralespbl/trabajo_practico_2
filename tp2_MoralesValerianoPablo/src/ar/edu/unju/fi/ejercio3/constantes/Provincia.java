@@ -1,5 +1,4 @@
 package ar.edu.unju.fi.ejercio3.constantes;
-
 public enum Provincia {	
 	    JUJUY(797955L, 53244L), 
 	    SALTA(1440672L, 155340L), 
