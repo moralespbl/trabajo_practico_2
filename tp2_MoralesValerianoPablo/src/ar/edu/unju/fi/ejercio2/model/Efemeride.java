@@ -51,5 +51,10 @@ public class Efemeride {
 	public void setDetalle(String detalle) {
 		this.detalle = detalle;
 	}
+
+	@Override
+	public String toString() {
+		return "Efemeride [codigo=" + codigo + ", mes=" + mes + ", dia=" + dia + ", detalle=" + detalle + "]";
+	}
 	
 }
