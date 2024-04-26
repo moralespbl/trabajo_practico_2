@@ -28,16 +28,45 @@ public class Main {
 			opcion=validarEntero();
 			switch(opcion) {
 			case 1: crearJugador();break;
-			case 2: ;break;
-			case 3: ;break;
-			case 4: ;break;
+			case 2: mostrarJugadores() ;break;
+			case 3: modificarPosicion();break;
+			case 4: eliminarJugador();break;
 			case 5: System.out.println("Fin del Programa");break;
 			default: System.out.println("Opcion incorrecta"); break;
 		}
 		}while (opcion != 5);
-
 	}
-
+	/**
+	 * Solicita al usuario el ingreso de los atributos del objeto jugador
+	 * si el no existe otro jugador con el mismo nombre y apellido es agregado al a lista
+	 * jugadores
+	 */
+	public static void crearJugador() {
+		int num;
+		Jugador jugador = new Jugador();
+		System.out.println("Nombre: ");
+		jugador.setNombre(validarString());
+		System.out.println("Apellido: ");
+		jugador.setApellido(validarString());
+		if ( buscarJugador(jugador.getNombre(),jugador.getApellido()) == null ){
+			System.out.print("Fecha de Nacimiento (dd-MM-yyyy): ");
+			jugador.setFecha_Nacimiento(validarFecha());		
+			System.out.println("Nacionalidad: ");
+			jugador.setNacionalidad(validarString());
+			System.out.println("Estatura: ");
+			jugador.setEstatura(validarFload());
+			System.out.println("Peso: ");
+			jugador.setPeso(validarFload());
+			num= elegirPosicion();
+			jugador.setPosicion(Posicion.values()[num-1]);
+			jugadores.add(jugador);
+			System.out.println("Jugador Creado ");
+		}
+		else {
+			System.out.println("Ya existe el jugador");
+		}		
+	}
+	
 	/**
 	 * Controla que el valor ingresado por consola sea un entero, de lo contrario vuelve a solicitar el ingreso
 	 * @return valor entero
@@ -78,7 +107,10 @@ public class Main {
 		}while(bandera == false );	
 		return cadena;
 	}
-	
+	/**
+	 * Controla que el valor ingresado por consola sea float, de lo contrario vuelve a solicitar el ingreso
+	 * @return float
+	 */
 	public static float validarFload() {
 		 boolean bandera;
 	        float numero = 0.0f;
@@ -90,9 +122,32 @@ public class Main {
 	                System.out.println("Error, ingrese solo un número decimal:");
 	                bandera = false;	                
 	            }
-	            sc.nextLine(); // Limpiar el buffer de entrada
+	            sc.nextLine(); 
 	        } while (bandera == false);
 	        return numero;
+	    }
+	
+	/**
+	 * Valida una fecha ingresada por el usuario en el formato "dd-MM-yyyy".
+	 *  @return  La fecha válida ingresada por el usuario como un objeto LocalDate.
+	 */
+	public static LocalDate validarFecha() {
+		 LocalDate fechaNac=null;
+		 boolean bandera;
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	        do {
+	        	bandera = true;
+	        	
+			    String fechaNacStr = validarString();
+	            try {
+					fechaNac = LocalDate.parse(fechaNacStr, formatter);
+	            } catch (DateTimeParseException e) {
+	            	System.out.println("La fecha no se puede convertir");
+			    	bandera = false;	                
+	            }
+	            sc.nextLine(); 
+	        } while (bandera == false);
+	        return fechaNac;
 	    }
 	
 	/**
@@ -115,51 +170,69 @@ public class Main {
 		System.out.println("---- Posiciones ------");
 		mostrarEnumerado(Posicion.values());
 		do {
-			System.out.println("Elija una opción:");
+			System.out.println("Elija una opción disponible:");
 			opcion=validarEntero();
 		} while (opcion < 1 || opcion > Posicion.values().length);		
 		return opcion;
 	}
 	
-	public static void crearJugador() {
-		boolean bandera;
+	public static Jugador buscarJugador(String nombre, String apellido) {
+		Jugador jugadorEncontrado=null;
+		for(Jugador jugador: jugadores) {
+			if( jugador.getNombre().equals(nombre) && jugador.getApellido().equals(apellido) ) {
+				jugadorEncontrado = jugador;
+			}
+		}
+		return jugadorEncontrado;
+	}
+	
+	public static void mostrarJugadores() {
+		System.out.println("---Lista de Jugadores ----");
+		jugadores.forEach(j->System.out.println(j));
+	}
+	
+	/**
+	 * Se solicita al usuario ingresar el nombre y apellido del jugador cuya posición se desea modificar.
+	 */
+	public static void modificarPosicion() {
 		int num;
 		Jugador jugador = new Jugador();
 		System.out.println("Nombre: ");
 		jugador.setNombre(validarString());
 		System.out.println("Apellido: ");
 		jugador.setApellido(validarString());
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-		do {
-			bandera = true;
-			System.out.print("Fecha de Nacimiento (dd-MM-yyyy): ");
-		    String fechaNaciStr = validarString();
-		    try {
-		    	jugador.setFecha_Nacimiento(LocalDate.parse(fechaNaciStr, formatter));
-		    } catch(DateTimeParseException e) {
-		    	System.out.println("La fecha no se puede convertir");
-		    	bandera = false;
-		    }
-		} while (bandera == false);
-		
-		System.out.println("Nacionalidad: ");
-		jugador.setNacionalidad(validarString());
-		System.out.println("Estatura: ");
-		jugador.setEstatura(validarFload());
-		System.out.println("Peso: ");
-		jugador.setPeso(validarFload());
-		num= elegirPosicion();
-		jugador.setPosicion(Posicion.values()[num-1]);
-		
-		
+		jugador = buscarJugador(jugador.getNombre(),jugador.getApellido());
+		if (jugador != null ){
+			int i = jugadores.indexOf(jugador);
+			num= elegirPosicion();
+			jugadores.get(i).setPosicion(Posicion.values()[num-1]);
+			System.out.println("Posicion modificada");
+		}
+		else {
+			System.out.println("No existe jugador");
+		}	
 	}
 	
-	
-	
-	
-	
-	
+	/**
+	 * Elimina un jugador de la lista de jugadores.
+	 * Si no se encuentra el jugador en la lista, se muestra un mensaje indicando que el jugador no existe.
+	 */
+	public static void eliminarJugador() {
+		Jugador jugador = new Jugador();
+		System.out.println("Nombre: ");
+		jugador.setNombre(validarString());
+		System.out.println("Apellido: ");
+		jugador.setApellido(validarString());
+		jugador = buscarJugador(jugador.getNombre(),jugador.getApellido());
+		if (jugador != null ){
+			int i = jugadores.indexOf(jugador);
+			jugadores.remove(i);
+			System.out.println("Jugador eliminado");
+		}
+		else {
+			System.out.println("No existe jugador");
+		}	
+	}
 	
 	
 	

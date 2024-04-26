@@ -92,6 +92,13 @@ public class Jugador {
 		 int edad = periodo.getYears();
 		 return edad; 
 	 }
+
+	@Override
+	public String toString() {
+		return "Jugador [nombre=" + nombre + ", apellido=" + apellido + ", fecha_Nacimiento=" + fecha_Nacimiento
+				+ ", nacionalidad=" + nacionalidad + ", estatura=" + estatura + ", peso=" + peso + ", posicion="
+				+ posicion + "]";
+	}
 	
 	
 	
