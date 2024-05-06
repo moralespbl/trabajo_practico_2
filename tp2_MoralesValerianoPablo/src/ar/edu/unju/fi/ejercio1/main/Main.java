@@ -38,6 +38,7 @@ public class Main {
 		} while( opcion<1 || opcion>4 || opcion != 4);
 
 	}
+	
 	/**
 	 * Controla que el valor ingresado por consola sea un entero, de lo contrario vuelve a solicitar el ingreso
 	 * @return valor entero
